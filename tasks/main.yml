@@ -49,6 +49,13 @@
     - config
     - service
 
+- name: "Create dir for log"
+  file:
+    state: directory
+    path: "/var/log/zabbix"
+    owner: zabbix
+    group: zabbix
+
 - name: "Install local python-netaddr package"
   pip:
     name: netaddr
@@ -56,7 +63,7 @@
   register: zabbix_python_netaddr_package_installed
   until: zabbix_python_netaddr_package_installed is succeeded
   delegate_to: localhost
-  become: True
+#  become: True
   when:
     - ansible_all_ipv4_addresses is defined or (zabbix_agent_ip is not defined and total_private_ip_addresses is defined)
 

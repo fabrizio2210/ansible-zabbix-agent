@@ -95,7 +95,7 @@
   fail:
     msg: "The specified network interface does not exist"
   when:
-    - zabbix_agent_listeninterface
+    - zabbix_agent_listeninterface|bool
     - (zabbix_agent_listeninterface not in ansible_all_ipv4_addresses)
   tags:
     - zabbix-agent
@@ -105,7 +105,7 @@
   set_fact:
     network_interface: ansible_{{ zabbix_agent_listeninterface }}
   when:
-    - zabbix_agent_listeninterface
+    - zabbix_agent_listeninterface|bool
     - not zabbix_agent_listenip
 
 - name: "Get IP of agent_listeninterface when no agent_listenip specified"
@@ -113,7 +113,7 @@
     zabbix_agent_listenip: "{{ hostvars[inventory_hostname][network_interface]['ipv4'].address | default('0.0.0.0') }}"
     zabbix_agent_ip: "{{ hostvars[inventory_hostname][network_interface]['ipv4'].address | default('0.0.0.0') }}"
   when:
-    - zabbix_agent_listeninterface
+    - zabbix_agent_listeninterface|bool
     - not zabbix_agent_listenip
   tags:
     - zabbix-agent
@@ -157,7 +157,7 @@
   delegate_to: localhost
   become: "{{ zabbix_agent_become_on_localhost }}"
   when:
-    - zabbix_api_create_hostgroup or zabbix_api_create_hosts
+    - zabbix_api_create_hostgroup or zabbix_api_create_hosts|bool
 
 - name: "Create hostgroups"
   zabbix_group:
@@ -168,7 +168,7 @@
     state: "{{ zabbix_create_hostgroup }}"
     validate_certs: "{{ zabbix_validate_certs|default(omit) }}"
   when:
-    - zabbix_api_create_hostgroup
+    - zabbix_api_create_hostgroup|bool
   delegate_to: localhost
   become: no
   tags:
@@ -197,7 +197,7 @@
     tls_accept: "{{ zabbix_agent_tls_config[zabbix_agent_tlsconnect if zabbix_agent_tlsconnect else 'unencrypted'] }}"
     validate_certs: "{{ zabbix_validate_certs|default(omit) }}"
   when:
-    - zabbix_api_create_hosts
+    - zabbix_api_create_hosts|bool
   delegate_to: localhost
   become: no
   changed_when: false
@@ -215,7 +215,7 @@
     validate_certs: "{{ zabbix_validate_certs|default(omit) }}"
   with_items: "{{ zabbix_macros | default([]) }}"
   when:
-    - zabbix_api_create_hosts
+    - zabbix_api_create_hosts|bool
     - zabbix_macros is defined
     - item.macro_key is defined
   delegate_to: localhost

@@ -1,0 +1,67 @@
+---
+# Tasks specific for Debian/Ubuntu Systems
+
+- name: "Include Zabbix gpg ids"
+  include_vars: zabbix.yml
+
+- name: "Set short version name"
+  set_fact:
+    zabbix_short_version: "{{ zabbix_version | regex_replace('\\.', '') }}"
+
+- name: "OpenWrt | Installing zabbix-agent"
+  opkg:
+    name: "{{ zabbix_agent_package }}"
+    state: "{{ zabbix_agent_package_state }}"
+    update_cache: yes
+  become: yes
+  tags:
+    - zabbix-agent
+    - init
+
+- debug:
+    var: zabbix_sender_package
+- debug:
+    var: zabbix_get_package
+- debug:
+    var: zabbix_agent_extra_packages
+
+- name: "OpenWrt | Installing zabbix-agent sender"
+  opkg:
+    name: "{{ zabbix_sender_package }}"
+    state: "{{ zabbix_agent_package_state }}"
+    update_cache: yes
+  become: yes
+  tags:
+    - zabbix-agent
+    - init
+
+- name: "OpenWrt | Installing zabbix-agent get"
+  opkg:
+    name: "{{ zabbix_get_package }}"
+    state: "{{ zabbix_agent_package_state }}"
+    update_cache: yes
+  become: yes
+  tags:
+    - zabbix-agent
+    - init
+
+- name: "OpenWrt | Installing zabbix-agent extras"
+  opkg:
+    pkg: "{{ item }}"
+    state: "{{ zabbix_agent_package_state }}"
+    update_cache: yes
+  with_items: "{{ zabbix_agent_extra_packages }}"
+  become: yes
+  tags:
+    - zabbix-agent
+    - init
+
+- name: "OpenWrt | Enable the service"
+  service:
+    name: "{{ zabbix_agent_service }}"
+    enabled: yes
+  become: yes
+  tags:
+    - zabbix-agent
+    - init
+    - service

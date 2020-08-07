@@ -49,6 +49,16 @@
     - config
     - service
 
+- name: "Install the correct repository"
+  include: "OpenWrt.yml"
+  when:
+    - ansible_os_family == "OpenWrt"
+  tags:
+    - zabbix-agent
+    - init
+    - config
+    - service
+
 - name: "Create dir for log"
   file:
     state: directory
@@ -66,6 +76,7 @@
   become: "{{ zabbix_agent_become_on_localhost }}"
   when:
     - ansible_all_ipv4_addresses is defined or (zabbix_agent_ip is not defined and total_private_ip_addresses is defined)
+    - not ansible_os_family == "OpenWrt"
 
 - name: "Get Total Private IP Addresses"
   set_fact:

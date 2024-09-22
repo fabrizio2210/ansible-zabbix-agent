@@ -20,7 +20,7 @@
     - zabbix-agent
 
 - name: "Install the correct repository"
-  include: "RedHat.yml"
+  include_tasks: "RedHat.yml"
   when:
     - ansible_os_family == "RedHat"
   tags:
@@ -30,7 +30,7 @@
     - service
 
 - name: "Install the correct repository"
-  include: "Debian.yml"
+  include_tasks: "Debian.yml"
   when:
     - ansible_os_family == "Debian"
   tags:
@@ -40,7 +40,7 @@
     - service
 
 - name: "Install the correct repository"
-  include: "Suse.yml"
+  include_tasks: "Suse.yml"
   when:
     - ansible_os_family == "Suse"
   tags:
@@ -50,7 +50,7 @@
     - service
 
 - name: "Install the correct repository"
-  include: "OpenWrt.yml"
+  include_tasks: "OpenWrt.yml"
   when:
     - ansible_os_family == "OpenWrt"
   tags:
@@ -152,11 +152,11 @@
     - config
 
 - name: "Install the correct repository"
-  include: Windows.yml
+  include_tasks: Windows.yml
   when: ansible_os_family == "Windows"
 
 - name: "Install the correct repository"
-  include: Linux.yml
+  include_tasks: Linux.yml
   when: ansible_os_family != "Windows"
 
 - name: "Installing the Zabbix-api package on localhost"
@@ -235,7 +235,7 @@
     - api
 
 - name: "Including userparameters"
-  include: "userparameter.yml"
+  include_tasks: "userparameter.yml"
   when: zabbix_agent_userparameters|length > 0
   tags:
     - zabbix-agent

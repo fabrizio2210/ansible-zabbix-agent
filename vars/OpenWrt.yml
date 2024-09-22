@@ -5,6 +5,7 @@ zabbix_agent: zabbix-agent
 zabbix_agent_allowroot: 1
 zabbix_agent_dir: /etc
 zabbix_agent_include: /etc/zabbix_agentd.conf.d/
+zabbix_agent_logfile: /var/log/zabbix_agentd.log
 zabbix_agent_pidfile: /var/run/zabbix.pid
 zabbix_agent_service: zabbix_agentd
 zabbix_agent_conf: zabbix_agentd.conf
